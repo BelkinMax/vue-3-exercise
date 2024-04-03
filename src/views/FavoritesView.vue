@@ -10,5 +10,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <h2>Favorites View</h2>
+  <section class="favorites-view">
+    <h2>Favorites View</h2>
+  </section>
 </template>
+
+<style lang="scss" scoped>
+.favorites-view {
+}
+</style>
