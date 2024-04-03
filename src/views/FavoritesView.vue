@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'HomeView',
+  name: 'FavoritesView',
   setup() {
     return {}
   }
@@ -10,5 +10,5 @@ export default defineComponent({
 </script>
 
 <template>
-  <h2>Home View</h2>
+  <h2>Favorites View</h2>
 </template>
