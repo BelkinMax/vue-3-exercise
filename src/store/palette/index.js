@@ -25,7 +25,7 @@ export const usePaletteStore = defineStore('palette', {
       this.favorites.splice(idx, 1);
     },
     changeFavoriteName (name, idx) {
-      this.favorites[idx] = { ...this.favorites[idx], name };
+      this.favorites[idx].name = name;
     }
   },
 })
