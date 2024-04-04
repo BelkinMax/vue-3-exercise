@@ -1,5 +1,5 @@
 <script>
-import { defineComponent, reactive, computed, onMounted } from 'vue'
+import { defineComponent, reactive, computed } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
 import useFavorites from '@/composables/useFavorites.composable'
 import usePaletteStore from '@/composables/usePaletteStore.composable'
@@ -12,14 +12,8 @@ export default defineComponent({
   setup() {
     const { state, replacePaletteItem } = usePaletteStore()
     const palettes = computed(() => state.palettes);
-    ('home', palettes)
     const { addPaletteToFavorites } = useFavorites()
     const animate = reactive([])
-
-    onMounted(() => {
-      ('moiunted', state.palettes); // Debería mostrar el array lleno
-    });
-
 
     /**
      * Replaces the palette at the specified index with a new palette.
