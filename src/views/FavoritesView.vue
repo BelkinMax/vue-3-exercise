@@ -1,22 +1,14 @@
 <script>
 import { defineComponent } from 'vue'
-import { useStorage } from '@vueuse/core'
 import PaletteCard from '@/components/PaletteCard.vue'
 
 export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const favorites = useStorage('palettes', [])
-
-    function removeFromFavorites (id) {
-      const index = favorites.value.findIndex(obj => obj.id === id);
-
-      favorites.value.splice(index, 1)
-    }
+    const favorites = []
 
     return {
-      removeFromFavorites,
       favorites
     }
   }
@@ -24,7 +16,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <h2>Favorites View</h2>
+  <h2>My Favorites</h2>
 
   <TransitionGroup name="list" tag="section" class="favorites-view">
     <PaletteCard
@@ -33,7 +25,6 @@ export default defineComponent({
       is-favorite
       is-editable
       :item="item"
-      @favorites-click="removeFromFavorites"
     />
   </TransitionGroup>
 </template>

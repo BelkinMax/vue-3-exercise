@@ -25,11 +25,20 @@ export default defineComponent({
       default: false
     }
   },
-  emits: ['favorites-click'],
-  setup({ item }, { emit }) {
+  setup({ item }) {
     const showCopyFeedback = ref(false)
     const title = item.name
 
+    /**
+     * Copies the CSS code for a linear gradient background to the clipboard.
+     *
+     * This method uses the `navigator.clipboard.writeText()` method to copy the CSS code
+     * to the clipboard. The CSS code is generated based on the colors provided as an array
+     * in the `item` object. The colors are joined together with comma separator and used
+     * in a linear gradient CSS property.
+     *
+     * @return {void}
+     */
     function copyCss() {
       navigator.clipboard.writeText(
         `background-image: linear-gradient(135deg, ${item.colors.join(', ')})`
@@ -42,13 +51,9 @@ export default defineComponent({
       }, 1000)
     }
 
-    function emitAddToFavorites() {
-      emit('favorites-click', item.id)
-    }
-
     return {
       copyCss,
-      emitAddToFavorites,
+      toggleFavorites: () => {},
       title,
       showCopyFeedback
     }
@@ -64,7 +69,7 @@ export default defineComponent({
       :style="{
         backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`
       }"
-      @click="emitAddToFavorites"
+      @click="toggleFavorites"
     >
       <IconFavorite class="icon" :filled="isFavorite" />
     </button>
