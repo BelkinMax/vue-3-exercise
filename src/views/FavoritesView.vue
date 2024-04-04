@@ -1,15 +1,24 @@
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+
+import { useGlobalState } from '@/store';
 
 export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const favorites = []
+    const { state, removeFavorite } = useGlobalState();
+
+    let favorites = computed(() => state.value?.favorites || [])
+
+    function toggleFavorite (item) {
+      removeFavorite(item);
+    }
 
     return {
-      favorites
+      favorites,
+      toggleFavorite
     }
   }
 })
@@ -19,7 +28,14 @@ export default defineComponent({
   <h2>My Favorites</h2>
 
   <TransitionGroup name="list" tag="section" class="favorites-view">
-    <PaletteCard v-for="item in favorites" :key="item.id" is-favorite is-editable :item="item" />
+    <PaletteCard 
+      v-for="item in favorites" 
+      :key="item.id" 
+      is-favorite 
+      is-editable 
+      :item="item"
+      @toggleFavorite="toggleFavorite"
+    />
   </TransitionGroup>
 </template>
 

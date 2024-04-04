@@ -24,11 +24,17 @@ export const useGlobalState = createGlobalState(
         state.value.favorites.push(item)
     }
 
+    function removeFavorite (item) {
+        const newFavorites = state.value.favorites.filter((fav) => fav.id != item.id);
+        state.value.favorites = newFavorites
+    }
+
     
     return {
         state,
         updatePalettes,
-        addFavorite
+        addFavorite,
+        removeFavorite
     };
   }
 )
