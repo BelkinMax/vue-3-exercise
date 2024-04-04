@@ -15,6 +15,10 @@ export default defineComponent({
       type: Object,
       required: true
     },
+    index: {
+      type: Number,
+      required: true
+    },
     isFavorite: {
       type: Boolean,
       required: false,
@@ -26,9 +30,10 @@ export default defineComponent({
       default: false
     }
   },
-  setup({ item }) {
+  emits: ['paletteClick', 'paletteTitleChange'],
+  setup({ item, index }, ctx) {
     const showCopyFeedback = ref(false)
-    const title = item.name
+    const title = ref(item.name)
 
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
@@ -50,11 +55,20 @@ export default defineComponent({
       }, 1000)
     }
 
+    function toggleFavorites () {
+      ctx.emit('paletteClick', item, index);
+    }
+
+    function savePaletteName () {
+      ctx.emit('paletteTitleChange', index, item, title);
+    }
+
     return {
       copyCss,
-      toggleFavorites: () => {},
+      toggleFavorites,
       title,
-      showCopyFeedback
+      showCopyFeedback,
+      savePaletteName
     }
   }
 })
@@ -75,7 +89,7 @@ export default defineComponent({
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
+        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" v-model="title" @keyup.enter="savePaletteName" />
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">

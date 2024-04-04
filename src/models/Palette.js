@@ -7,8 +7,8 @@ function randomColors() {
 }
 
 export default class Palette {
-  constructor({ colors, name } = {}) {
-    this.id = ++counter
+  constructor({ colors, name, id } = {}) {
+    this.id = id || ++counter
     this.setColors(colors ? [...colors] : [...randomColors()])
     this.setName(name)
   }
