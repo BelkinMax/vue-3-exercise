@@ -12,12 +12,12 @@ export default defineComponent({
   setup() {
     const { state, replacePaletteItem } = usePaletteStore()
     const palettes = computed(() => state.palettes);
-    console.log('home', palettes)
+    ('home', palettes)
     const { addPaletteToFavorites } = useFavorites()
     const animate = reactive([])
 
     onMounted(() => {
-      console.log('moiunted', state.palettes); // Debería mostrar el array lleno
+      ('moiunted', state.palettes); // Debería mostrar el array lleno
     });
 
 

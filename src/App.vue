@@ -7,7 +7,7 @@ const { addPalettes, state } = usePaletteStore()
 
 onMounted(() => {
   addPalettes(30)
-  console.log(state)
+  (state)
 })
 
 </script>

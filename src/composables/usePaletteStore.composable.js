@@ -7,7 +7,7 @@ const globalState = reactive({
 
 export default function usePaletteStore () {
   function addPalettes(qty) {
-    console.log('here')
+    ('here')
     if(!globalState.palettes.length) {
       for (let i = 0; i < qty; i++) {
         globalState.palettes.push(new Palette());

@@ -5,10 +5,10 @@ import IconCopy from '@/components/icons/IconCopy.vue'
 import IconFavorite from '@/components/icons/IconFavorite.vue'
 
 export default defineComponent({
-  name: "PaletteCard",
+  name: 'PaletteCard',
   components: {
     IconFavorite,
-    IconCopy,
+    IconCopy
   },
   props: {
     item: {
@@ -24,7 +24,7 @@ export default defineComponent({
       type: Boolean,
       required: false,
       default: false
-    },
+    }
   },
   setup({ item }) {
     const showCopyFeedback = ref(false)
@@ -54,9 +54,9 @@ export default defineComponent({
       copyCss,
       title,
       showCopyFeedback
-    };
-  },
-});
+    }
+  }
+})
 </script>
 
 <template>
