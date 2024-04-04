@@ -19,7 +19,6 @@ export const usePaletteStore = defineStore('palette', {
       this.palettes[idx] = palette
     },
     addToFavorites (palette) {
-      console.log(this.favorites, this.favorites.value)
       this.favorites.push(palette);
     },
     removeFromFavorites (idx) {
