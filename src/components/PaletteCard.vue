@@ -76,13 +76,7 @@ export default defineComponent({
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input
-          v-else
-          :disabled="!isEditable"
-          type="text"
-          data-cy="card-title"
-          :value="title"
-        >
+        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">
@@ -183,7 +177,7 @@ export default defineComponent({
         &:focus-visible {
           padding: 3px 5px;
           border: none;
-          outline: 1px solid var(--color-border-hover)
+          outline: 1px solid var(--color-border-hover);
         }
       }
     }

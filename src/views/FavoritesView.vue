@@ -19,13 +19,7 @@ export default defineComponent({
   <h2>My Favorites</h2>
 
   <TransitionGroup name="list" tag="section" class="favorites-view">
-    <PaletteCard
-      v-for="item in favorites"
-      :key="item.id"
-      is-favorite
-      is-editable
-      :item="item"
-    />
+    <PaletteCard v-for="item in favorites" :key="item.id" is-favorite is-editable :item="item" />
   </TransitionGroup>
 </template>
 

@@ -21,12 +21,7 @@ export default defineComponent({
      * @return {void}
      */
     function addPalettes(qty) {
-      palettes.push(
-        ...Array.from(
-          { length: qty },
-          () => new Palette()
-        )
-      )
+      palettes.push(...Array.from({ length: qty }, () => new Palette()))
     }
 
     /**
@@ -36,7 +31,7 @@ export default defineComponent({
      * @return {undefined}
      */
     // eslint-disable-next-line no-unused-vars
-    function replacePalette (index = -1) {
+    function replacePalette(index = -1) {
       if (index < 0) {
         return
       }
