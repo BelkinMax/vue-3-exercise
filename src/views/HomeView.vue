@@ -1,6 +1,7 @@
 <script>
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import { usePalleteStore } from '../store/Palette.store'
 import Palette from '@/models/Palette.js'
 
 export default defineComponent({
@@ -9,10 +10,13 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const palettes = reactive([])
+    const palleteStore = usePalleteStore();
+    const palettes = palleteStore.palettes
     const animate = reactive([])
 
-    addPalettes(30)
+    if (palleteStore.palettes.length === 0){
+      palleteStore.addPalettes(30)
+    }
 
     /**
      * Adds new palettes to the array.
@@ -20,9 +24,6 @@ export default defineComponent({
      * @param {number} qty - The number of palettes to add.
      * @return {void}
      */
-    function addPalettes(qty) {
-      palettes.push(...Array.from({ length: qty }, () => new Palette()))
-    }
 
     /**
      * Replaces the palette at the specified index with a new palette.
@@ -35,6 +36,8 @@ export default defineComponent({
       if (index < 0) {
         return
       }
+
+      palleteStore.saveInFavorites(palettes[index]);
 
       animate[index] = true
 
@@ -49,7 +52,8 @@ export default defineComponent({
 
     return {
       palettes,
-      animate
+      animate,
+      replacePalette
     }
   }
 })
@@ -65,6 +69,7 @@ export default defineComponent({
       :item="item"
       class="card"
       :class="{ hidden: animate[index] }"
+      @click="replacePalette(index)"
     />
   </section>
 </template>

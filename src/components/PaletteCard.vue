@@ -3,6 +3,7 @@ import { defineComponent, ref } from 'vue'
 import { copyColors } from '@/helpers/clipboard.js'
 import IconCopy from '@/components/icons/IconCopy.vue'
 import IconFavorite from '@/components/icons/IconFavorite.vue'
+import { usePalleteStore } from '../store/Palette.store'
 
 export default defineComponent({
   name: 'PaletteCard',
@@ -30,6 +31,12 @@ export default defineComponent({
     const showCopyFeedback = ref(false)
     const title = item.name
 
+    const palleteStore = usePalleteStore();
+    
+    function updateName (event) {
+      palleteStore.updateName(item.id, event.target.value)
+    }
+
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
      *
@@ -54,7 +61,8 @@ export default defineComponent({
       copyCss,
       toggleFavorites: () => {},
       title,
-      showCopyFeedback
+      showCopyFeedback,
+      updateName
     }
   }
 })
@@ -75,7 +83,7 @@ export default defineComponent({
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
+        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" v-model="title" :value="title" @keyup.enter="updateName" />
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">
