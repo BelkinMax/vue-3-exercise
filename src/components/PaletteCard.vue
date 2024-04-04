@@ -1,8 +1,8 @@
 <script>
-import { defineComponent, ref } from "vue";
-import { copyColors } from "@/helpers/clipboard.js";
-import IconCopy from "@/components/icons/IconCopy.vue";
-import IconFavorite from "@/components/icons/IconFavorite.vue";
+import { defineComponent, ref } from 'vue'
+import { copyColors } from '@/helpers/clipboard.js'
+import IconCopy from '@/components/icons/IconCopy.vue'
+import IconFavorite from '@/components/icons/IconFavorite.vue'
 
 export default defineComponent({
   name: "PaletteCard",
@@ -13,22 +13,22 @@ export default defineComponent({
   props: {
     item: {
       type: Object,
-      required: true,
+      required: true
     },
     isFavorite: {
       type: Boolean,
       required: false,
-      default: false,
+      default: false
     },
     isEditable: {
       type: Boolean,
       required: false,
-      default: false,
+      default: false
     },
   },
   setup({ item }) {
-    const showCopyFeedback = ref(false);
-    const title = item.name;
+    const showCopyFeedback = ref(false)
+    const title = item.name
 
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
@@ -41,13 +41,13 @@ export default defineComponent({
      * @return {void}
      */
     function copyCss() {
-      copyColors(item.colors);
+      copyColors(item.colors)
 
-      showCopyFeedback.value = true;
+      showCopyFeedback.value = true
 
       setTimeout(() => {
-        showCopyFeedback.value = false;
-      }, 1000);
+        showCopyFeedback.value = false
+      }, 1000)
     }
 
     return {
@@ -65,7 +65,7 @@ export default defineComponent({
       class="palette-button"
       data-cy="card-favorites-button"
       :style="{
-        backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`,
+        backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`
       }"
       @click="$emit('toggle-favorite')"
     >
