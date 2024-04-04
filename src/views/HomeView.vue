@@ -2,6 +2,8 @@
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
 import Palette from '@/models/Palette.js'
+import { useStatePalettes } from '@/composables/state-palettes';
+
 
 export default defineComponent({
   name: 'HomeView',
@@ -9,10 +11,12 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const palettes = reactive([])
+    const { palettes } = useStatePalettes();
     const animate = reactive([])
 
-    addPalettes(30)
+    if (!palettes.length) {
+      addPalettes(30)
+    }
 
     /**
      * Adds new palettes to the array.
@@ -48,6 +52,7 @@ export default defineComponent({
     }
 
     return {
+      replacePalette,
       palettes,
       animate
     }
@@ -65,6 +70,7 @@ export default defineComponent({
       :item="item"
       class="card"
       :class="{ hidden: animate[index] }"
+      @remove="replacePalette(index)"
     />
   </section>
 </template>

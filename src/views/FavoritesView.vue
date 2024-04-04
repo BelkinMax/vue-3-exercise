@@ -1,12 +1,13 @@
 <script>
 import { defineComponent } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import { useStatePalettes } from '@/composables/state-palettes';
 
 export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const favorites = []
+    const { favorites } = useStatePalettes();
 
     return {
       favorites
