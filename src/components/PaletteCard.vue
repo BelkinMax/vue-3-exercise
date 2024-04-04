@@ -71,7 +71,13 @@ export default defineComponent({
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else type="text" data-cy="card-title" :value="title">
+        <input
+          v-else
+          :disabled="!isEditable"
+          type="text"
+          data-cy="card-title"
+          :value="title"
+        >
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">
@@ -92,7 +98,7 @@ export default defineComponent({
 .move-leave-to {
   transition: all 0.3s ease;
   opacity: 0;
-  transform: translateY(-100%);
+  transform: translateY(-1rem);
 }
 
 .palette-card {
@@ -101,7 +107,6 @@ export default defineComponent({
   margin: 0;
   overflow: hidden;
   transition: box-shadow 0.3s ease;
-  min-width: 190px;
 
   .palette-button {
     position: relative;
@@ -153,11 +158,21 @@ export default defineComponent({
         white-space: nowrap;
       }
 
+      span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
       input {
         padding: 0;
         border: none;
         outline: none;
-        transition: padding 0.3s ease;
+
+        &:disabled {
+          background-color: transparent;
+          cursor: text;
+        }
 
         &:focus,
         &:focus-visible {
