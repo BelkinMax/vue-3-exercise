@@ -1,5 +1,5 @@
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import { copyColors } from '@/helpers/clipboard.js'
 import IconCopy from '@/components/icons/IconCopy.vue'
 import IconFavorite from '@/components/icons/IconFavorite.vue'
@@ -26,7 +26,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup({ item }) {
+  emits: ['addGradientToFav', 'removeGradientToFav', 'nameEdited'],
+  setup({ item, isFavorite }, { emit }) {
     const showCopyFeedback = ref(false)
     const title = item.name
 
@@ -50,9 +51,18 @@ export default defineComponent({
       }, 1000)
     }
 
+    function toggleFavorites () {
+        if( isFavorite ) {
+          emit('removeGradientToFav');
+        }
+        emit('addGradientToFav');
+    }
+
+    watch(title, (index) => { console.log(index); })
+
     return {
       copyCss,
-      toggleFavorites: () => {},
+      toggleFavorites,
       title,
       showCopyFeedback
     }
@@ -133,7 +143,6 @@ export default defineComponent({
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
     background-color: #fff;
     font-size: 0.75rem;
     line-height: 1;

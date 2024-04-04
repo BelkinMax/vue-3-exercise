@@ -2,13 +2,14 @@
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
 import Palette from '@/models/Palette.js'
+import useFavoritesStore from "@/composables/favoritesStore.composable.js";
+import useGradientsStore from "@/composables/gradientsStore.composable.js"
 
 export default defineComponent({
   name: 'HomeView',
-  components: {
-    PaletteCard
-  },
   setup() {
+    const { addFavorite } = useFavoritesStore();
+    const { gradients, replaceGradient } = useGradientsStore();
     const palettes = reactive([])
     const animate = reactive([])
 
@@ -20,8 +21,8 @@ export default defineComponent({
      * @param {number} qty - The number of palettes to add.
      * @return {void}
      */
-    function addPalettes(qty) {
-      palettes.push(...Array.from({ length: qty }, () => new Palette()))
+    function addPalettes() {
+      palettes.push();
     }
 
     /**
@@ -39,7 +40,7 @@ export default defineComponent({
       animate[index] = true
 
       setTimeout(() => {
-        palettes[index] = new Palette()
+        replaceGradient(index, new Palette());
       }, 300)
 
       setTimeout(() => {
@@ -47,10 +48,20 @@ export default defineComponent({
       }, 500)
     }
 
+    function addGradient (index) {
+      addFavorite(gradients.value[index]);
+      replacePalette(index);
+    }
+
     return {
       palettes,
-      animate
+      gradients,
+      animate,
+      addGradient
     }
+  },
+  components: {
+    PaletteCard
   }
 })
 </script>
@@ -60,11 +71,12 @@ export default defineComponent({
 
   <section class="home-view">
     <PaletteCard
-      v-for="(item, index) in palettes"
+      v-for="(item, index) in gradients"
       :key="item.id"
       :item="item"
       class="card"
       :class="{ hidden: animate[index] }"
+      @addGradientToFav="addGradient(index)"
     />
   </section>
 </template>
