@@ -32,6 +32,7 @@ export default defineComponent({
      */
     // eslint-disable-next-line no-unused-vars
     function replacePalette(index = -1) {
+      console.log(index)
       if (index < 0) {
         return
       }
@@ -49,7 +50,8 @@ export default defineComponent({
 
     return {
       palettes,
-      animate
+      animate,
+      replacePalette
     }
   }
 })
@@ -65,6 +67,7 @@ export default defineComponent({
       :item="item"
       class="card"
       :class="{ hidden: animate[index] }"
+      @toggle-favorites="replacePalette(index)"
     />
   </section>
 </template>

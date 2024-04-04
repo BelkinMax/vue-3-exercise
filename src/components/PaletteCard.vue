@@ -1,34 +1,34 @@
 <script>
-import { defineComponent, ref } from 'vue'
-import { copyColors } from '@/helpers/clipboard.js'
-import IconCopy from '@/components/icons/IconCopy.vue'
-import IconFavorite from '@/components/icons/IconFavorite.vue'
+import { defineComponent, ref } from "vue";
+import { copyColors } from "@/helpers/clipboard.js";
+import IconCopy from "@/components/icons/IconCopy.vue";
+import IconFavorite from "@/components/icons/IconFavorite.vue";
 
 export default defineComponent({
-  name: 'PaletteCard',
+  name: "PaletteCard",
   components: {
     IconFavorite,
-    IconCopy
+    IconCopy,
   },
   props: {
     item: {
       type: Object,
-      required: true
+      required: true,
     },
     isFavorite: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     isEditable: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   setup({ item }) {
-    const showCopyFeedback = ref(false)
-    const title = item.name
+    const showCopyFeedback = ref(false);
+    const title = item.name;
 
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
@@ -41,23 +41,23 @@ export default defineComponent({
      * @return {void}
      */
     function copyCss() {
-      copyColors(item.colors)
+      copyColors(item.colors);
 
-      showCopyFeedback.value = true
+      showCopyFeedback.value = true;
 
       setTimeout(() => {
-        showCopyFeedback.value = false
-      }, 1000)
+        showCopyFeedback.value = false;
+      }, 1000);
     }
 
     return {
       copyCss,
       toggleFavorites: () => {},
       title,
-      showCopyFeedback
-    }
-  }
-})
+      showCopyFeedback,
+    };
+  },
+});
 </script>
 
 <template>
@@ -66,16 +66,22 @@ export default defineComponent({
       class="palette-button"
       data-cy="card-favorites-button"
       :style="{
-        backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`
+        backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`,
       }"
-      @click="toggleFavorites"
+      @click="$emit('toggle-favorites')"
     >
       <IconFavorite class="icon" :filled="isFavorite" />
     </button>
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
+        <input
+          v-else
+          :disabled="!isEditable"
+          type="text"
+          data-cy="card-title"
+          :value="title"
+        />
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">
