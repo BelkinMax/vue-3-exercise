@@ -79,7 +79,7 @@ describe('Home page', () => {
 
           cy.get(cardTitleSelector)
             .first()
-            .should('contain', text)
+            .should('have.value', text)
         });
     })
   })
@@ -131,7 +131,7 @@ describe('Home page', () => {
 
       cy.get(cardTitleSelector)
         .first()
-        .should('contain', 'Color Name')
+        .should('have.value', 'Color Name')
     })
   })
 })
