@@ -2,6 +2,7 @@
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
 import Palette from '@/models/Palette.js'
+import { useStorage } from '@vueuse/core'
 
 export default defineComponent({
   name: 'HomeView',
@@ -9,10 +10,15 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const palettes = reactive([])
+    const state = useStorage('my-store', { palettes: [], favorites: [] })
+    const palettes = reactive(state.value.palettes)
+    const favorites = reactive(state.value.favorites)
     const animate = reactive([])
 
-    addPalettes(30)
+    if (!palettes.length) {
+      addPalettes(30)
+    }
+
 
     /**
      * Adds new palettes to the array.
@@ -36,6 +42,8 @@ export default defineComponent({
         return
       }
 
+      favorites.push(palettes[index])
+
       animate[index] = true
 
       setTimeout(() => {
@@ -49,7 +57,8 @@ export default defineComponent({
 
     return {
       palettes,
-      animate
+      animate,
+      replacePalette
     }
   }
 })
@@ -65,6 +74,7 @@ export default defineComponent({
       :item="item"
       class="card"
       :class="{ hidden: animate[index] }"
+      @click="replacePalette(index)"
     />
   </section>
 </template>
