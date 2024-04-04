@@ -1,29 +1,28 @@
 import { reactive, readonly } from 'vue';
 import Palette from '@/models/Palette.js';
 
-export default function usePaletteStore () {
-  const state = reactive({
-    palettes: [],
-  });
+const globalState = reactive({
+  palettes: [],
+});
 
+export default function usePaletteStore () {
   function addPalettes(qty) {
     console.log('here')
-    if(!state.palettes.length) {
+    if(!globalState.palettes.length) {
       for (let i = 0; i < qty; i++) {
-        state.palettes.push(new Palette());
+        globalState.palettes.push(new Palette());
       }
     }
-    console.log(state.palettes)
   }
 
   function replacePaletteItem(index) {
     setTimeout(() => {
-      state.palettes[index] = new Palette()
+      globalState.palettes[index] = new Palette()
     }, 300)
   }
 
   return {
-    state: readonly(state),
+    state: readonly(globalState),
     addPalettes,
     replacePaletteItem
   }
