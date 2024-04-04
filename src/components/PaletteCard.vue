@@ -1,5 +1,6 @@
 <script>
 import { defineComponent, ref } from 'vue'
+import { copyColors } from '@/helpers/clipboard.js'
 import IconCopy from '@/components/icons/IconCopy.vue'
 import IconFavorite from '@/components/icons/IconFavorite.vue'
 
@@ -40,9 +41,7 @@ export default defineComponent({
      * @return {void}
      */
     function copyCss() {
-      navigator.clipboard.writeText(
-        `background-image: linear-gradient(135deg, ${item.colors.join(', ')})`
-      )
+      copyColors(item.colors)
 
       showCopyFeedback.value = true
 
