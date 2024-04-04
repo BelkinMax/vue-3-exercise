@@ -24,7 +24,7 @@ header {
   max-height: 100vh;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 h1 {
@@ -52,9 +52,5 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
-}
-
-main {
-  padding: 2rem 0;
 }
 </style>

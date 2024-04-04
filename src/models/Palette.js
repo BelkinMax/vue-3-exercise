@@ -7,15 +7,17 @@ function randomColors() {
 }
 
 export default class Palette {
-  name = ''
-  colors = []
-
-  constructor(colors) {
+  constructor({ colors, name } = {}) {
     this.id = ++counter
-    this.colors = colors ? [...colors] : [...randomColors()]
+    this.setColors(colors ? [...colors] : [...randomColors()])
+    this.setName(name)
   }
 
-  updateColors(colors) {
-    this.colors = [...colors]
+  setColors(colors) {
+    this.colors = [...colors].slice(0, 2)
+  }
+
+  setName(name) {
+    this.name = name || this.colors.join(' - ')
   }
 }

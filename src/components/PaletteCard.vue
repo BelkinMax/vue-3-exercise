@@ -13,11 +13,22 @@ export default defineComponent({
     item: {
       type: Object,
       required: true
+    },
+    isFavorite: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    isEditable: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
-  setup({ item }) {
+  emits: ['favorites-click'],
+  setup({ item }, { emit }) {
     const showCopyFeedback = ref(false)
-    const isFavorite = ref(false)
+    const title = item.name
 
     function copyCss() {
       navigator.clipboard.writeText(
@@ -31,38 +42,39 @@ export default defineComponent({
       }, 1000)
     }
 
-    function toggleIsFavorite() {
-      isFavorite.value = !isFavorite.value
+    function emitAddToFavorites() {
+      emit('favorites-click', item.id)
     }
 
     return {
       copyCss,
-      toggleIsFavorite,
-      showCopyFeedback,
-      isFavorite
+      emitAddToFavorites,
+      title,
+      showCopyFeedback
     }
   }
 })
 </script>
 
 <template>
-  <figure class="palette-card">
+  <figure class="palette-card" data-cy="card">
     <button
       class="palette-button"
+      data-cy="card-favorites-button"
       :style="{
         backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`
       }"
-      @click="toggleIsFavorite"
+      @click="emitAddToFavorites"
     >
       <IconFavorite class="icon" :filled="isFavorite" />
     </button>
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
-        <span v-if="showCopyFeedback">Copied! 👍</span>
-        <span v-else>{{ item.colors.join(' - ') }}</span>
+        <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
+        <input v-else type="text" data-cy="card-title" :value="title">
       </TransitionGroup>
 
-      <button @click="copyCss">
+      <button data-cy="card-copy-button" @click="copyCss">
         <IconCopy class="icon" />
       </button>
     </figcaption>
@@ -80,7 +92,7 @@ export default defineComponent({
 .move-leave-to {
   transition: all 0.3s ease;
   opacity: 0;
-  transform: translateY(-30px);
+  transform: translateY(-100%);
 }
 
 .palette-card {
@@ -89,6 +101,7 @@ export default defineComponent({
   margin: 0;
   overflow: hidden;
   transition: box-shadow 0.3s ease;
+  min-width: 190px;
 
   .palette-button {
     position: relative;
@@ -119,8 +132,8 @@ export default defineComponent({
     align-items: center;
     gap: 1rem;
     background-color: #fff;
-    font-size: 0.875rem;
-    line-height: 1rem;
+    font-size: 0.75rem;
+    line-height: 1;
     font-weight: 500;
     padding: 1.5em;
     text-align: center;
@@ -128,7 +141,7 @@ export default defineComponent({
 
     .transition-box {
       position: relative;
-      height: 1rem;
+      height: 2rem;
       flex: 1;
 
       & > * {
@@ -138,6 +151,20 @@ export default defineComponent({
         top: 0;
         bottom: 0;
         white-space: nowrap;
+      }
+
+      input {
+        padding: 0;
+        border: none;
+        outline: none;
+        transition: padding 0.3s ease;
+
+        &:focus,
+        &:focus-visible {
+          padding: 3px 5px;
+          border: none;
+          outline: 1px solid var(--color-border-hover)
+        }
       }
     }
   }
