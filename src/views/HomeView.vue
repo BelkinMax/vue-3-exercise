@@ -1,7 +1,8 @@
 <script>
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, reactive, computed, onMounted } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
-import Palette from '@/models/Palette.js'
+import useFavorites from '@/composables/useFavorites.composable'
+import usePaletteStore from '@/composables/usePaletteStore.composable'
 
 export default defineComponent({
   name: 'HomeView',
@@ -9,20 +10,16 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const palettes = reactive([])
+    const { state, replacePaletteItem } = usePaletteStore()
+    const palettes = computed(() => state.palettes);
+    console.log('home', palettes)
+    const { addPaletteToFavorites } = useFavorites()
     const animate = reactive([])
 
-    addPalettes(30)
+    onMounted(() => {
+      console.log('moiunted', state.palettes); // Debería mostrar el array lleno
+    });
 
-    /**
-     * Adds new palettes to the array.
-     *
-     * @param {number} qty - The number of palettes to add.
-     * @return {void}
-     */
-    function addPalettes(qty) {
-      palettes.push(...Array.from({ length: qty }, () => new Palette()))
-    }
 
     /**
      * Replaces the palette at the specified index with a new palette.
@@ -31,21 +28,18 @@ export default defineComponent({
      * @return {undefined}
      */
     // eslint-disable-next-line no-unused-vars
-    function replacePalette(index = -1) {
-      console.log(index)
+    function replacePalette(item, index = -1) {
       if (index < 0) {
         return
       }
-
+      addPaletteToFavorites(item)
+      replacePaletteItem(index)
       animate[index] = true
-
-      setTimeout(() => {
-        palettes[index] = new Palette()
-      }, 300)
 
       setTimeout(() => {
         animate[index] = false
       }, 500)
+
     }
 
     return {
@@ -58,18 +52,20 @@ export default defineComponent({
 </script>
 
 <template>
-  <h2>Discover Palettes</h2>
-
-  <section class="home-view">
-    <PaletteCard
-      v-for="(item, index) in palettes"
-      :key="item.id"
-      :item="item"
-      class="card"
-      :class="{ hidden: animate[index] }"
-      @toggle-favorites="replacePalette(index)"
-    />
-  </section>
+  <main>
+    <h2>Discover Palettes</h2>
+    <section class="home-view">
+      <PaletteCard
+        v-for="(item, index) in palettes"
+        :key="item.id"
+        :item="item"
+        class="card"
+        :class="{ hidden: animate[index] }"
+        is-editable
+        @toggle-favorite="replacePalette(item, index)"
+      />
+    </section>
+  </main>
 </template>
 
 <style lang="scss" scoped>

@@ -52,9 +52,8 @@ export default defineComponent({
 
     return {
       copyCss,
-      toggleFavorites: () => {},
       title,
-      showCopyFeedback,
+      showCopyFeedback
     };
   },
 });
@@ -68,7 +67,7 @@ export default defineComponent({
       :style="{
         backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`,
       }"
-      @click="$emit('toggle-favorites')"
+      @click="$emit('toggle-favorite')"
     >
       <IconFavorite class="icon" :filled="isFavorite" />
     </button>

@@ -1,5 +1,15 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import usePaletteStore from '@/composables/usePaletteStore.composable'
+import { onMounted } from 'vue';
+
+const { addPalettes, state } = usePaletteStore()
+
+onMounted(() => {
+  addPalettes(30)
+  console.log(state)
+})
+
 </script>
 
 <template>

@@ -1,26 +1,37 @@
 <script>
 import { defineComponent } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import useFavorites from '@/composables/useFavorites.composable'
 
 export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const favorites = []
+    const { favoritePalettes, removePaletteFromFavorites } = useFavorites()
 
     return {
-      favorites
+      favoritePalettes,
+      removePaletteFromFavorites
     }
   }
 })
 </script>
 
 <template>
-  <h2>My Favorites</h2>
+  <main>
+    <h2>My Favorites</h2>
 
-  <TransitionGroup name="list" tag="section" class="favorites-view">
-    <PaletteCard v-for="item in favorites" :key="item.id" is-favorite is-editable :item="item" />
-  </TransitionGroup>
+    <TransitionGroup name="list" tag="section" class="favorites-view">
+      <PaletteCard 
+      v-for="item in favoritePalettes" 
+      :key="item.id" 
+      :item="item" 
+      is-favorite 
+      is-editable 
+      @toggle-favorite="removePaletteFromFavorites(item)"
+      />
+    </TransitionGroup>
+  </main>
 </template>
 
 <style lang="scss" scoped>
