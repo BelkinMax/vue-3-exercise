@@ -4,7 +4,7 @@ import { useStorage } from '@vueuse/core'
 const palettes = reactive([])
 const favorites = useStorage('favorites', [])
 
-export function useStatePalettes () {
+export function useGradientComposable () {
   
   function addFavorite (item) {
     favorites.value.push(item)

@@ -2,7 +2,7 @@
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
 import Palette from '@/models/Palette.js'
-import { useStatePalettes } from '@/composables/state-palettes';
+import { useGradientComposable } from '@/composables/gradient.composable';
 
 
 export default defineComponent({
@@ -11,7 +11,7 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const { palettes } = useStatePalettes();
+    const { palettes } = useGradientComposable();
     const animate = reactive([])
 
     if (!palettes.length) {

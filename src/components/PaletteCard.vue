@@ -3,7 +3,7 @@ import { defineComponent, ref } from 'vue'
 import { copyColors } from '@/helpers/clipboard.js'
 import IconCopy from '@/components/icons/IconCopy.vue'
 import IconFavorite from '@/components/icons/IconFavorite.vue'
-import { useStatePalettes } from '@/composables/state-palettes';
+import { useGradientComposable } from '@/composables/gradient.composable';
 
 export default defineComponent({
   name: 'PaletteCard',
@@ -31,7 +31,7 @@ export default defineComponent({
     const showCopyFeedback = ref(false)
     const title = ref(item.name);
 
-    const { addFavorite, removeFavorite, updateItemTitle } = useStatePalettes();
+    const { addFavorite, removeFavorite, updateItemTitle } = useGradientComposable();
 
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
