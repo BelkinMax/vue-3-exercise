@@ -26,9 +26,12 @@ export default defineComponent({
       default: false
     }
   },
+  emits: ['toggle-favorite'],
+
   setup({ item }) {
     const showCopyFeedback = ref(false)
     const title = item.name
+
 
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
@@ -74,13 +77,7 @@ export default defineComponent({
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input
-          v-else
-          :disabled="!isEditable"
-          type="text"
-          data-cy="card-title"
-          :value="title"
-        />
+        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">
