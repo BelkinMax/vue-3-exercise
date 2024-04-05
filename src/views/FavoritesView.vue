@@ -1,12 +1,13 @@
 <script>
 import { defineComponent } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import { useGradientComposable } from '@/composables/gradient.composable';
 
 export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const favorites = []
+    const { favorites } = useGradientComposable();
 
     return {
       favorites
