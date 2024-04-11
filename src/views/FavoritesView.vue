@@ -1,15 +1,19 @@
 <script>
 import { defineComponent } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import { useStorage } from '@vueuse/core'
+
+const FAVOURITES_PALETTES_STORAGE_ID = 'favourites_palletes';
 
 export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const favorites = []
+    const favorites = useStorage(FAVOURITES_PALETTES_STORAGE_ID, []);
+
 
     return {
-      favorites
+      favorites,
     }
   }
 })
