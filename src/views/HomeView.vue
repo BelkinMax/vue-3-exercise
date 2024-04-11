@@ -1,18 +1,22 @@
 <script>
 import { defineComponent, reactive } from 'vue'
-import PaletteCard from '@/components/PaletteCard.vue'
 import Palette from '@/models/Palette.js'
+import { useStore } from '@/composables/useStore.composable.js'
+import Grid from '@/components/Grid.vue'
 
 export default defineComponent({
   name: 'HomeView',
   components: {
-    PaletteCard
+    Grid
   },
   setup() {
-    const palettes = reactive([])
+    const {palettes, favorites} = useStore();
     const animate = reactive([])
 
-    addPalettes(30)
+    if (!palettes.length) {
+      addPalettes(30)
+    }
+
 
     /**
      * Adds new palettes to the array.
@@ -36,6 +40,8 @@ export default defineComponent({
         return
       }
 
+      favorites.push(palettes[index])
+
       animate[index] = true
 
       setTimeout(() => {
@@ -49,7 +55,8 @@ export default defineComponent({
 
     return {
       palettes,
-      animate
+      animate,
+      replacePalette
     }
   }
 })
@@ -57,14 +64,13 @@ export default defineComponent({
 
 <template>
   <h2>Discover Palettes</h2>
-
   <section class="home-view">
-    <PaletteCard
-      v-for="(item, index) in palettes"
-      :key="item.id"
-      :item="item"
-      class="card"
-      :class="{ hidden: animate[index] }"
+    <Grid
+      class="home-view__grid"
+      :items="palettes"
+      itemsClass="card"
+      :animate="animate"
+      @buttonClick="replacePalette"
     />
   </section>
 </template>
@@ -72,21 +78,5 @@ export default defineComponent({
 <style lang="scss" scoped>
 h2 {
   margin-bottom: 3rem;
-}
-
-.home-view {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 3em;
-
-  .card {
-    opacity: 1;
-    transition: all 0.3s ease;
-
-    &.hidden {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
-  }
 }
 </style>

@@ -52,8 +52,8 @@ export default defineComponent({
 
     return {
       copyCss,
-      toggleFavorites: () => {},
       title,
+      id: item.id,
       showCopyFeedback
     }
   }
@@ -68,14 +68,22 @@ export default defineComponent({
       :style="{
         backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`
       }"
-      @click="toggleFavorites"
+      @click="$emit('buttonClick')"
     >
       <IconFavorite class="icon" :filled="isFavorite" />
     </button>
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
+        <input
+          v-else
+          :disabled="!isEditable"
+          type="text"
+          data-cy="card-title"
+          :value="title"
+          @keyup.enter="({ target }) => target.blur()"
+          @blur="({ target }) => $emit('inputChanged', { id, value: target.value })"
+        />
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">
