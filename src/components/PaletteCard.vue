@@ -56,11 +56,12 @@ export default defineComponent({
     }
 
     function toggleFavorites () {
-      ctx.emit('paletteClick', props.item, props.index);
+      ctx.emit('paletteClick');
     }
 
-    function savePaletteName () {
-      ctx.emit('paletteTitleChange', props.index, props.item, title);
+    function savePaletteName (e) {
+      e.target.blur();
+      ctx.emit('paletteTitleChange', title);
     }
 
     return {

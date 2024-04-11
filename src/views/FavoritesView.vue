@@ -1,7 +1,6 @@
 <script>
 import { defineComponent } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
-import Palette from '@/models/Palette.js'
 import store from '@/store/'
 
 export default defineComponent({
@@ -10,22 +9,9 @@ export default defineComponent({
   setup() {
     const favorites = store.getters.getFavorites();
 
-    function removePaletteFavorite (item, index) {
-      store.mutations.deleteFavorite(index);
-    }
-
-    function updatePaletteName (index, item, title) {
-      const palette = new Palette(item);
-      palette.setName(title);
-
-      favorites[index] = palette
-      store.mutations.updateFavorites(favorites);
-    }
-
     return {
       favorites,
-      removePaletteFavorite,
-      updatePaletteName
+      store
     }
   }
 })
@@ -42,8 +28,8 @@ export default defineComponent({
       is-editable
       :item="item"
       :index="index"
-      @paletteClick="removePaletteFavorite"
-      @paletteTitleChange="updatePaletteName"
+      @paletteClick="store.mutations.deleteFavorite(index)"
+      @paletteTitleChange="(title) => store.mutations.updatePaletteFavoriteName(index, item, title)"
     />
   </TransitionGroup>
 </template>
