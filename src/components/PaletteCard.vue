@@ -26,11 +26,11 @@ export default defineComponent({
       default: false
     }
   },
-  emits: ['toggle-favorite'],
+  emits: ['toggle-favorite', 'update-name'],
 
-  setup({ item }) {
+  setup({ item }, { emit }) {
     const showCopyFeedback = ref(false)
-    const title = item.name
+    const title = ref(item.name)
 
 
     /**
@@ -53,10 +53,15 @@ export default defineComponent({
       }, 1000)
     }
 
+    function updatePaletteName() {
+      emit('update-name', title.value)
+    }
+
     return {
       copyCss,
       title,
-      showCopyFeedback
+      showCopyFeedback,
+      updatePaletteName
     }
   }
 })
@@ -77,7 +82,7 @@ export default defineComponent({
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
+        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" v-model="title" @keydown.enter="updatePaletteName"/>
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">

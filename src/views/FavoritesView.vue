@@ -7,11 +7,12 @@ export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const { favoritePalettes, removePaletteFromFavorites } = useFavorites()
+    const { favoritePalettes, removePaletteFromFavorites, updatePaletteName } = useFavorites()
 
     return {
       favoritePalettes,
-      removePaletteFromFavorites
+      removePaletteFromFavorites,
+      updatePaletteName
     }
   }
 })
@@ -23,12 +24,13 @@ export default defineComponent({
 
     <TransitionGroup name="list" tag="section" class="favorites-view">
       <PaletteCard 
-      v-for="item in favoritePalettes" 
-      :key="item.id" 
-      :item="item" 
-      is-favorite 
-      is-editable 
-      @toggle-favorite="removePaletteFromFavorites(item)"
+        v-for="(item, index) in favoritePalettes" 
+        :key="item.id" 
+        :item="item" 
+        is-favorite 
+        is-editable 
+        @toggle-favorite="removePaletteFromFavorites(item)"
+        @update-name="updatePaletteName(index, item, $event)"
       />
     </TransitionGroup>
   </main>

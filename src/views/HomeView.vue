@@ -55,7 +55,6 @@ export default defineComponent({
         :item="item"
         class="card"
         :class="{ hidden: animate[index] }"
-        is-editable
         @toggle-favorite="replacePalette(item, index)"
       />
     </section>
