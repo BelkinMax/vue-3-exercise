@@ -1,14 +1,13 @@
 <script>
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
-import { useStorage } from '@vueuse/core'
+import { useStore } from '@/composables/useStore.composable.js'
 
 export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const state = useStorage('my-store', { palettes: [], favorites: [] })
-    const favorites = reactive(state.value.favorites)
+    const { favorites } = useStore();
 
     function removeItem (index) {
       favorites.splice(index, 1)

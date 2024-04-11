@@ -2,7 +2,7 @@
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
 import Palette from '@/models/Palette.js'
-import { useStorage } from '@vueuse/core'
+import { useStore } from '@/composables/useStore.composable.js'
 
 export default defineComponent({
   name: 'HomeView',
@@ -10,9 +10,7 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const state = useStorage('my-store', { palettes: [], favorites: [] })
-    const palettes = reactive(state.value.palettes)
-    const favorites = reactive(state.value.favorites)
+    const {palettes, favorites} = useStore();
     const animate = reactive([])
 
     if (!palettes.length) {
