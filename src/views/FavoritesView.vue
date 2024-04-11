@@ -9,11 +9,15 @@ export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const favorites = useStorage(FAVOURITES_PALETTES_STORAGE_ID, []);
+    let favorites = useStorage(FAVOURITES_PALETTES_STORAGE_ID, []);
 
+    function removePaletteFavourites (palette) {
+      favorites.value = favorites.value.filter((pal) => pal.id !== palette.id)
+    }
 
     return {
       favorites,
+      removePaletteFavourites
     }
   }
 })
@@ -23,7 +27,7 @@ export default defineComponent({
   <h2>My Favorites</h2>
 
   <TransitionGroup name="list" tag="section" class="favorites-view">
-    <PaletteCard v-for="item in favorites" :key="item.id" is-favorite is-editable :item="item" />
+    <PaletteCard @click="() => removePaletteFavourites(item)" v-for="item in favorites" :key="item.id" is-favorite is-editable :item="item" />
   </TransitionGroup>
 </template>
 
