@@ -13,8 +13,8 @@ export const usePalleteStore = defineStore('pallete', {
     }
   },
   actions: {
-    saveInFavorites (text) {
-      this.favorites.push(text)
+    saveInFavorites (pallete) {
+      this.favorites.push(pallete)
     },
     updateName (id, newName) {
       const item = this.favorites.find(pallete => pallete.id === id);
