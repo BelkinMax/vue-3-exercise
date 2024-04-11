@@ -1,15 +1,28 @@
 <script>
 import { defineComponent } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import { useStorage } from '@vueuse/core'
+
+const FAVOURITES_PALETTES_STORAGE_ID = 'favourites_palletes';
 
 export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const favorites = []
+    let favorites = useStorage(FAVOURITES_PALETTES_STORAGE_ID, []);
+
+    function removePaletteFavourites (palette) {
+      favorites.value = favorites.value.filter((pal) => pal.id !== palette.id)
+    }
+
+    function updatePalette (palette, index) {
+      favorites.value.splice(index, 1, palette);
+    }
 
     return {
-      favorites
+      favorites,
+      removePaletteFavourites,
+      updatePalette
     }
   }
 })
@@ -19,7 +32,15 @@ export default defineComponent({
   <h2>My Favorites</h2>
 
   <TransitionGroup name="list" tag="section" class="favorites-view">
-    <PaletteCard v-for="item in favorites" :key="item.id" is-favorite is-editable :item="item" />
+    <PaletteCard 
+      @toggle-favorites="() => removePaletteFavourites(item)"
+      @name-edited="(pallete) => updatePalette(pallete, index)"
+      v-for="item in favorites"
+      :key="item.id"
+      is-favorite
+      is-editable
+      :item="item"
+    />
   </TransitionGroup>
 </template>
 

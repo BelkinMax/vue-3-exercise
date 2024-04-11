@@ -2,6 +2,10 @@
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
 import Palette from '@/models/Palette.js'
+import { useStorage } from '@vueuse/core'
+import { useGlobalState } from '../store'
+
+const FAVOURITES_PALETTES_STORAGE_ID = 'favourites_palletes';
 
 export default defineComponent({
   name: 'HomeView',
@@ -9,8 +13,9 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const palettes = reactive([])
+    const { palettes } = useGlobalState();
     const animate = reactive([])
+    const favouritesPalletes = useStorage(FAVOURITES_PALETTES_STORAGE_ID, []);
 
     addPalettes(30)
 
@@ -47,9 +52,15 @@ export default defineComponent({
       }, 500)
     }
 
+    function addPaleteFavorite (pallete, index) {
+      favouritesPalletes.value = [...favouritesPalletes.value, pallete]
+      replacePalette(index)
+    }
+
     return {
       palettes,
-      animate
+      animate,
+      addPaleteFavorite
     }
   }
 })
@@ -65,6 +76,7 @@ export default defineComponent({
       :item="item"
       class="card"
       :class="{ hidden: animate[index] }"
+      @toggle-favorites="() => addPaleteFavorite(item, index)"
     />
   </section>
 </template>
