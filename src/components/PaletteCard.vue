@@ -3,7 +3,9 @@ import { defineComponent, ref, watch } from 'vue'
 import { copyColors } from '@/helpers/clipboard.js'
 import IconCopy from '@/components/icons/IconCopy.vue'
 import IconFavorite from '@/components/icons/IconFavorite.vue'
+import DialogConfirm from '@/components/DialogConfirm.vue'
 import { useFavorites } from '@/composables/favorites'
+import { useDialog } from '@/modules/dialog/composables/dialog'
 
 export default defineComponent({
   name: 'PaletteCard',
@@ -27,7 +29,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup({ item }, { emit }) {
+  setup({ item, isFavorite }, { emit }) {
     const showCopyFeedback = ref(false)
     const title = ref(item.name);
 
@@ -51,11 +53,21 @@ export default defineComponent({
       }, 1000)
     }
 
+    const { open } = useDialog();
+
     const { toggle, updateFavoriteName } = useFavorites();
 
-    const toggleFavorites = (item) => {
-      toggle(item);
-      emit('favorite-click');
+    const toggleFavorites = async (item) => {
+      let confirmed = true;
+      if (isFavorite) {
+        const dialogProps = { date: Date.now() }; // para hacer pruebas
+        const dialogOptions = { closable: false }; // para hacer pruebas
+        confirmed = await open(DialogConfirm, dialogProps, dialogOptions);
+      }
+      if (confirmed) {
+        toggle(item);
+        emit('favorite-click');
+      }
     }
 
     watch(title, (value) => {
