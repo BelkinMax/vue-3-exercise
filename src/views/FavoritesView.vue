@@ -1,15 +1,27 @@
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import ModalConfirm from '@/components/ModalConfirm.vue'
 import store from '@/store/'
 
 export default defineComponent({
   name: 'FavoritesView',
-  components: { PaletteCard },
+  components: { PaletteCard, ModalConfirm },
   setup() {
+    const modalIndex = ref(0);
     const favorites = store.getters.getFavorites();
 
+    function modalConfirmed (index) {
+      store.mutations.deleteFavorite(index)
+    }
+    function showModal (index) {
+      modalIndex.value = index;
+    }
+
     return {
+      modalIndex,
+      showModal,
+      modalConfirmed,
       favorites,
       store
     }
@@ -20,6 +32,8 @@ export default defineComponent({
 <template>
   <h2>My Favorites</h2>
 
+  <ModalConfirm @confirm="modalConfirmed" :index="modalIndex" />
+
   <TransitionGroup name="list" tag="section" class="favorites-view">
     <PaletteCard
       v-for="(item, index) in favorites"
@@ -28,7 +42,7 @@ export default defineComponent({
       is-editable
       :item="item"
       :index="index"
-      @paletteClick="store.mutations.deleteFavorite(index)"
+      @paletteClick="showModal(index)"
       @paletteTitleChange="(title) => store.mutations.updatePaletteFavoriteName(index, item, title)"
     />
   </TransitionGroup>
