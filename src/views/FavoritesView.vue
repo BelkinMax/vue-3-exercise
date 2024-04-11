@@ -1,11 +1,12 @@
 <script>
 import { defineComponent } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import PalettesGrid from '@/components/PalettesGrid.vue'
 import useFavorites from '@/composables/useFavorites.composable'
 
 export default defineComponent({
   name: 'FavoritesView',
-  components: { PaletteCard },
+  components: { PaletteCard, PalettesGrid },
   setup() {
     const { favoritePalettes, removePaletteFromFavorites, updatePaletteName } = useFavorites()
 
@@ -22,7 +23,7 @@ export default defineComponent({
   <main>
     <h2>My Favorites</h2>
 
-    <TransitionGroup name="list" tag="section" class="favorites-view">
+    <PalettesGrid>
       <PaletteCard 
         v-for="(item, index) in favoritePalettes" 
         :key="item.id" 
@@ -32,7 +33,7 @@ export default defineComponent({
         @toggle-favorite="removePaletteFromFavorites(item)"
         @update-name="updatePaletteName(index, item, $event)"
       />
-    </TransitionGroup>
+    </PalettesGrid>
   </main>
 </template>
 
@@ -49,12 +50,5 @@ export default defineComponent({
 
 h2 {
   margin-bottom: 3rem;
-}
-
-.favorites-view {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 3em;
 }
 </style>

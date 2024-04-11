@@ -1,13 +1,15 @@
 <script>
 import { defineComponent, reactive, computed } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import PalettesGrid from '@/components/PalettesGrid.vue'
 import useFavorites from '@/composables/useFavorites.composable'
 import usePaletteStore from '@/composables/usePaletteStore.composable'
 
 export default defineComponent({
   name: 'HomeView',
   components: {
-    PaletteCard
+    PaletteCard,
+    PalettesGrid
   },
   setup() {
     const { state, replacePaletteItem } = usePaletteStore()
@@ -48,7 +50,7 @@ export default defineComponent({
 <template>
   <main>
     <h2>Discover Palettes</h2>
-    <section class="home-view">
+    <PalettesGrid>
       <PaletteCard
         v-for="(item, index) in palettes"
         :key="item.id"
@@ -57,7 +59,7 @@ export default defineComponent({
         :class="{ hidden: animate[index] }"
         @toggle-favorite="replacePalette(item, index)"
       />
-    </section>
+    </PalettesGrid>
   </main>
 </template>
 
@@ -67,10 +69,6 @@ h2 {
 }
 
 .home-view {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 3em;
-
   .card {
     opacity: 1;
     transition: all 0.3s ease;
