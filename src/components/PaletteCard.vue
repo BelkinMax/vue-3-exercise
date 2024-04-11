@@ -10,6 +10,7 @@ export default defineComponent({
     IconFavorite,
     IconCopy
   },
+  emits: ['toggle', 'changeName'],
   props: {
     item: {
       type: Object,
@@ -26,9 +27,9 @@ export default defineComponent({
       default: false
     }
   },
-  setup({ item }) {
+  setup({ item }, { emit }) {
     const showCopyFeedback = ref(false)
-    const title = item.name
+    const title = ref(item.name)
 
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
@@ -50,9 +51,19 @@ export default defineComponent({
       }, 1000)
     }
 
+    function toggle () {
+      emit('toggle')
+    }
+
+    function setName (event) {
+      event.target.blur();
+      emit('changeName', title.value)
+    }
+
     return {
       copyCss,
-      toggleFavorites: () => {},
+      toggle,
+      setName,
       title,
       showCopyFeedback
     }
@@ -68,14 +79,14 @@ export default defineComponent({
       :style="{
         backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`
       }"
-      @click="toggleFavorites"
+      @click="toggle"
     >
       <IconFavorite class="icon" :filled="isFavorite" />
     </button>
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
+        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" v-model="title" @keypress.enter="setName" />
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">
