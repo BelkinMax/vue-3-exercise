@@ -26,9 +26,12 @@ export default defineComponent({
       default: false
     }
   },
-  setup({ item }) {
+  emits: ['toggle-favorite', 'update-name'],
+
+  setup({ item }, { emit }) {
     const showCopyFeedback = ref(false)
-    const title = item.name
+    const title = ref(item.name)
+
 
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
@@ -50,11 +53,15 @@ export default defineComponent({
       }, 1000)
     }
 
+    function updatePaletteName() {
+      emit('update-name', title.value)
+    }
+
     return {
       copyCss,
-      toggleFavorites: () => {},
       title,
-      showCopyFeedback
+      showCopyFeedback,
+      updatePaletteName
     }
   }
 })
@@ -68,17 +75,25 @@ export default defineComponent({
       :style="{
         backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`
       }"
-      @click="toggleFavorites"
+      @click="$emit('toggle-favorite')"
     >
       <IconFavorite class="icon" :filled="isFavorite" />
     </button>
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
-        <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
+        <span v-if="showCopyFeedback" data-cy="card-copied" aria-live="polite">Copied! 👍</span>
+        <div v-else>
+          <label class="sr-only" :for="`input-item-${item.name}-${item.id}`">Name</label>
+          <input 
+            :id="`input-item-${item.name}-${item.id}`" 
+            :disabled="!isEditable" type="text" 
+            data-cy="card-title" 
+            v-model="title" 
+            @keydown.enter="updatePaletteName"/>
+        </div>
       </TransitionGroup>
 
-      <button data-cy="card-copy-button" @click="copyCss">
+      <button data-cy="card-copy-button" :aria-label="`remove favorite ${item.name}`" @click="copyCss">
         <IconCopy class="icon" />
       </button>
     </figcaption>
@@ -166,6 +181,7 @@ export default defineComponent({
         padding: 0;
         border: none;
         outline: none;
+        width: 100%;
 
         &:disabled {
           background-color: transparent;
@@ -178,6 +194,17 @@ export default defineComponent({
           border: none;
           outline: 1px solid var(--color-border-hover);
         }
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
       }
     }
   }
