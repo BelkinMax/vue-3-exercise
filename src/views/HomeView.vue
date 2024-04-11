@@ -76,7 +76,7 @@ export default defineComponent({
       :item="item"
       class="card"
       :class="{ hidden: animate[index] }"
-      @click="() => addPaleteFavorite(item, index)"
+      @toggle-favorites="() => addPaleteFavorite(item, index)"
     />
   </section>
 </template>
