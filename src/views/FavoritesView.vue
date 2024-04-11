@@ -1,15 +1,24 @@
 <script>
 import { defineComponent } from 'vue'
+import { storeToRefs } from 'pinia'
 import PaletteCard from '@/components/PaletteCard.vue'
+import { usePaletteStore } from '../store/Palette.store'
 
 export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const favorites = []
+
+    const paletteStore = usePaletteStore()
+    const { favoritePalettes } = storeToRefs(paletteStore)
+
+    function removeFromFavorites (id) {
+      paletteStore.removeFromFavorites(id)
+    }
 
     return {
-      favorites
+      favoritePalettes,
+      removeFromFavorites
     }
   }
 })
@@ -18,8 +27,15 @@ export default defineComponent({
 <template>
   <h2>My Favorites</h2>
 
-  <TransitionGroup name="list" tag="section" class="favorites-view">
-    <PaletteCard v-for="item in favorites" :key="item.id" is-favorite is-editable :item="item" />
+  <TransitionGroup name="list" tag="section" class="favorites-view" :key="favoritePalettes.length">
+    <PaletteCard
+      v-for="item in favoritePalettes"
+      :key="item.id"
+      is-editable
+      is-favorite
+      :item="item"
+      @addToFav="removeFromFavorites(item.id)"
+    />
   </TransitionGroup>
 </template>
 
