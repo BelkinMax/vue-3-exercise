@@ -8,12 +8,17 @@ export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard, ModalConfirm },
   setup() {
-    const modalIndex = ref(0);
+    const modalIndex = ref(null);
     const favorites = store.getters.getFavorites();
 
     function modalConfirmed (index) {
       store.mutations.deleteFavorite(index)
     }
+  
+    function modalClosed () {
+      modalIndex.value = null;
+    }
+
     function showModal (index) {
       modalIndex.value = index;
     }
@@ -21,6 +26,7 @@ export default defineComponent({
     return {
       modalIndex,
       showModal,
+      modalClosed,
       modalConfirmed,
       favorites,
       store
@@ -32,7 +38,12 @@ export default defineComponent({
 <template>
   <h2>My Favorites</h2>
 
-  <ModalConfirm @confirm="modalConfirmed" :index="modalIndex" />
+  <ModalConfirm
+    v-if="modalIndex !== null"
+    @close="modalClosed"
+    @confirm="modalConfirmed"
+    :index="modalIndex"
+  />
 
   <TransitionGroup name="list" tag="section" class="favorites-view">
     <PaletteCard
