@@ -81,7 +81,7 @@ export default defineComponent({
     </button>
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
-        <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
+        <span v-if="showCopyFeedback" data-cy="card-copied" aria-live="polite">Copied! 👍</span>
         <div v-else>
           <label class="sr-only" :for="`input-item-${item.name}-${item.id}`">Name</label>
           <input 
