@@ -8,7 +8,7 @@ export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const { state, removeFavorite } = useGlobalState();
+    const { state, removeFavorite, updatePaletteName } = useGlobalState();
 
     let favorites = computed(() => state.value?.favorites || [])
 
@@ -16,9 +16,14 @@ export default defineComponent({
       removeFavorite(item);
     }
 
+    function setPaletteName (item, name) {
+      updatePaletteName(item, name);
+    }
+
     return {
       favorites,
-      toggleFavorite
+      toggleFavorite,
+      setPaletteName
     }
   }
 })
@@ -34,7 +39,8 @@ export default defineComponent({
       is-favorite 
       is-editable 
       :item="item"
-      @toggleFavorite="toggleFavorite"
+      @toggleFavorite="toggleFavorite(item)"
+      @onNameInput="(name) => setPaletteName(item, name)"
     />
   </TransitionGroup>
 </template>

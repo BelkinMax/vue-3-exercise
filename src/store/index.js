@@ -29,12 +29,22 @@ export const useGlobalState = createGlobalState(
         state.value.favorites = newFavorites
     }
 
+    function updatePaletteName (item, name) {
+        const newFavorites = state.value.favorites.map((fav) => {
+            if (fav.id === item.id) fav.name = name;
+            return fav;
+        });
+
+        state.value.favorites = newFavorites;
+    }
+
     
     return {
         state,
         updatePalettes,
         addFavorite,
-        removeFavorite
+        removeFavorite,
+        updatePaletteName
     };
   }
 )
