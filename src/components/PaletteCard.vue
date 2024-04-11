@@ -31,9 +31,9 @@ export default defineComponent({
     }
   },
   emits: ['paletteClick', 'paletteTitleChange'],
-  setup({ item, index }, ctx) {
+  setup(props, ctx) {
     const showCopyFeedback = ref(false)
-    const title = ref(item.name)
+    const title = ref(props.item.name)
 
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
@@ -46,7 +46,7 @@ export default defineComponent({
      * @return {void}
      */
     function copyCss() {
-      copyColors(item.colors)
+      copyColors(props.item.colors)
 
       showCopyFeedback.value = true
 
@@ -56,11 +56,11 @@ export default defineComponent({
     }
 
     function toggleFavorites () {
-      ctx.emit('paletteClick', item, index);
+      ctx.emit('paletteClick', props.item, props.index);
     }
 
     function savePaletteName () {
-      ctx.emit('paletteTitleChange', index, item, title);
+      ctx.emit('paletteTitleChange', props.index, props.item, title);
     }
 
     return {
