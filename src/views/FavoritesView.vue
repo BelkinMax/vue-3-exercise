@@ -28,7 +28,7 @@ export default defineComponent({
   <h2>My Favorites</h2>
 
   <TransitionGroup name="list" tag="section" class="favorites-view" :key="allFavorites.length">
-    <PaletteCard v-for="item in allFavorites" :key="item.id" is-favorite is-editable :item="item" @click="removeFromFavorite(item.id)" />
+    <PaletteCard v-for="item in allFavorites" :key="item.id" is-favorite is-editable :item="item" @toggleFavorites="removeFromFavorite(item.id)" />
   </TransitionGroup>
 </template>
 

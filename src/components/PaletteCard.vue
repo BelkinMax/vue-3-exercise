@@ -27,7 +27,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup({ item }) {
+  emits: ['toggleFavorites'],
+  setup({ item }, { emit }) {
     const showCopyFeedback = ref(false)
     const title = item.name
 
@@ -59,7 +60,7 @@ export default defineComponent({
 
     return {
       copyCss,
-      toggleFavorites: () => {},
+      toggleFavorites: () => emit('toggleFavorites'),
       title,
       showCopyFeedback,
       updateName
