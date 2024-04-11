@@ -10,7 +10,7 @@ export default defineComponent({
     IconFavorite,
     IconCopy
   },
-  emits: ['toggleFavorites', 'changeName'],
+  emits: ['toggle', 'changeName'],
   props: {
     item: {
       type: Object,
@@ -51,8 +51,8 @@ export default defineComponent({
       }, 1000)
     }
 
-    function toggleFavorites () {
-      emit('toggleFavorites')
+    function toggle () {
+      emit('toggle')
     }
 
     function setName (event) {
@@ -62,7 +62,7 @@ export default defineComponent({
 
     return {
       copyCss,
-      toggleFavorites,
+      toggle,
       setName,
       title,
       showCopyFeedback
@@ -79,7 +79,7 @@ export default defineComponent({
       :style="{
         backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`
       }"
-      @click="toggleFavorites"
+      @click="toggle"
     >
       <IconFavorite class="icon" :filled="isFavorite" />
     </button>
