@@ -82,10 +82,18 @@ export default defineComponent({
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" v-model="title" @keydown.enter="updatePaletteName"/>
+        <div v-else>
+          <label class="sr-only" :for="`input-item-${item.name}-${item.id}`">Name</label>
+          <input 
+            :id="`input-item-${item.name}-${item.id}`" 
+            :disabled="!isEditable" type="text" 
+            data-cy="card-title" 
+            v-model="title" 
+            @keydown.enter="updatePaletteName"/>
+        </div>
       </TransitionGroup>
 
-      <button data-cy="card-copy-button" @click="copyCss">
+      <button data-cy="card-copy-button" :aria-label="`remove favorite ${item.name}`" @click="copyCss">
         <IconCopy class="icon" />
       </button>
     </figcaption>
@@ -173,6 +181,7 @@ export default defineComponent({
         padding: 0;
         border: none;
         outline: none;
+        width: 100%;
 
         &:disabled {
           background-color: transparent;
@@ -185,6 +194,17 @@ export default defineComponent({
           border: none;
           outline: 1px solid var(--color-border-hover);
         }
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
       }
     }
   }

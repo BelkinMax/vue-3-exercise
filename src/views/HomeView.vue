@@ -50,7 +50,7 @@ export default defineComponent({
 <template>
   <main>
     <h2>Discover Palettes</h2>
-    <PalettesGrid>
+    <PalettesGrid class="home-view">
       <PaletteCard
         v-for="(item, index) in palettes"
         :key="item.id"
@@ -69,6 +69,7 @@ h2 {
 }
 
 .home-view {
+
   .card {
     opacity: 1;
     transition: all 0.3s ease;
