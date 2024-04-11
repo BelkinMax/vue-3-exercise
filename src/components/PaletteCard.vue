@@ -1,11 +1,12 @@
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, defineEmits } from 'vue'
 import { copyColors } from '@/helpers/clipboard.js'
 import IconCopy from '@/components/icons/IconCopy.vue'
 import IconFavorite from '@/components/icons/IconFavorite.vue'
 
 export default defineComponent({
   name: 'PaletteCard',
+  emits: ['edit', 'remove'],
   components: {
     IconFavorite,
     IconCopy
@@ -26,9 +27,21 @@ export default defineComponent({
       default: false
     }
   },
-  setup({ item }) {
+  setup({ item }, { emit }) {
     const showCopyFeedback = ref(false)
     const title = item.name
+
+    function onFocusOut(e) {
+      emit('edit', {
+        event: e,
+        item: item,
+      })
+    }
+
+    function toggleFavorites() {
+      emit('remove')
+    }
+
 
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
@@ -52,7 +65,8 @@ export default defineComponent({
 
     return {
       copyCss,
-      toggleFavorites: () => {},
+      toggleFavorites,
+      onFocusOut,
       title,
       showCopyFeedback
     }
@@ -75,7 +89,7 @@ export default defineComponent({
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
+        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" @focusout="onFocusOut" />
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">
@@ -92,6 +106,7 @@ export default defineComponent({
   opacity: 1;
   transform: translateX(0);
 }
+
 .move-enter-from,
 .move-leave-to {
   transition: all 0.3s ease;

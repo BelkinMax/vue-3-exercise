@@ -1,7 +1,8 @@
 <script>
-import { defineComponent, reactive } from 'vue'
+import { defineComponent } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
-import Palette from '@/models/Palette.js'
+import { usePalette } from '@/composables/PaletteComposable.js'
+
 
 export default defineComponent({
   name: 'HomeView',
@@ -9,47 +10,14 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const palettes = reactive([])
-    const animate = reactive([])
-
+    const {palettes, addPalettes, animate, onPaletteClick } = usePalette()
     addPalettes(30)
 
-    /**
-     * Adds new palettes to the array.
-     *
-     * @param {number} qty - The number of palettes to add.
-     * @return {void}
-     */
-    function addPalettes(qty) {
-      palettes.push(...Array.from({ length: qty }, () => new Palette()))
-    }
-
-    /**
-     * Replaces the palette at the specified index with a new palette.
-     *
-     * @param {number} index - The index of the palette to replace. Must be a non-negative integer.
-     * @return {undefined}
-     */
-    // eslint-disable-next-line no-unused-vars
-    function replacePalette(index = -1) {
-      if (index < 0) {
-        return
-      }
-
-      animate[index] = true
-
-      setTimeout(() => {
-        palettes[index] = new Palette()
-      }, 300)
-
-      setTimeout(() => {
-        animate[index] = false
-      }, 500)
-    }
 
     return {
       palettes,
-      animate
+      animate,
+      onPaletteClick
     }
   }
 })
@@ -65,6 +33,7 @@ export default defineComponent({
       :item="item"
       class="card"
       :class="{ hidden: animate[index] }"
+      @click="onPaletteClick(item, index)"
     />
   </section>
 </template>
