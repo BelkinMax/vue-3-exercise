@@ -15,9 +15,14 @@ export default defineComponent({
       favorites.value = favorites.value.filter((pal) => pal.id !== palette.id)
     }
 
+    function updatePalette (palette, index) {
+      favorites.value.splice(index, 1, palette);
+    }
+
     return {
       favorites,
-      removePaletteFavourites
+      removePaletteFavourites,
+      updatePalette
     }
   }
 })
@@ -27,7 +32,15 @@ export default defineComponent({
   <h2>My Favorites</h2>
 
   <TransitionGroup name="list" tag="section" class="favorites-view">
-    <PaletteCard @toggle-favorites="() => removePaletteFavourites(item)" v-for="item in favorites" :key="item.id" is-favorite is-editable :item="item" />
+    <PaletteCard 
+      @toggle-favorites="() => removePaletteFavourites(item)"
+      @name-edited="(pallete) => updatePalette(pallete, index)"
+      v-for="item in favorites"
+      :key="item.id"
+      is-favorite
+      is-editable
+      :item="item"
+    />
   </TransitionGroup>
 </template>
 
