@@ -38,7 +38,6 @@ describe('Home page', () => {
 
       cy.get(cardTitleSelector)
         .each(($el) => {
-          console.log('1', $el.val());
           texts.push($el.val());
         });
 
@@ -55,7 +54,6 @@ describe('Home page', () => {
       cy.get(cardTitleSelector)
         .should('have.length.greaterThan', 1)
         .each(($el, idx) => {
-          console.log('2', $el.val());
           if ($el.val() !== texts[idx]) {
             throw new Error('Text does not match');
           }
