@@ -3,6 +3,7 @@ import { defineComponent, ref } from 'vue'
 import { copyColors } from '@/helpers/clipboard.js'
 import IconCopy from '@/components/icons/IconCopy.vue'
 import IconFavorite from '@/components/icons/IconFavorite.vue'
+import { usePaletteStore } from '../store/Palette.store'
 
 export default defineComponent({
   name: 'PaletteCard',
@@ -26,20 +27,17 @@ export default defineComponent({
       default: false
     }
   },
-  setup({ item }) {
-    const showCopyFeedback = ref(false)
-    const title = item.name
+  emits: ['addToFav'],
+  setup({ item }, { emit }) {
+    const showCopyFeedback = ref(false);
+    const title = item.name;
 
-    /**
-     * Copies the CSS code for a linear gradient background to the clipboard.
-     *
-     * This method uses the `navigator.clipboard.writeText()` method to copy the CSS code
-     * to the clipboard. The CSS code is generated based on the colors provided as an array
-     * in the `item` object. The colors are joined together with comma separator and used
-     * in a linear gradient CSS property.
-     *
-     * @return {void}
-     */
+    const paletteStore = usePaletteStore();
+
+    function changeName (event) {
+      paletteStore.changeName(item.id, event.target.value);
+    }
+
     function copyCss() {
       copyColors(item.colors)
 
@@ -47,14 +45,15 @@ export default defineComponent({
 
       setTimeout(() => {
         showCopyFeedback.value = false
-      }, 1000)
+      }, 1000);
     }
 
     return {
       copyCss,
-      toggleFavorites: () => {},
+      toggleFavorites: () => emit('addToFav'),
       title,
-      showCopyFeedback
+      showCopyFeedback,
+      changeName
     }
   }
 })
@@ -75,7 +74,14 @@ export default defineComponent({
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
+        <input
+          v-else
+          :disabled="!isEditable"
+          type="text"
+          data-cy="card-title"
+          v-model="title"
+          :value="title"
+          @keyup.enter="changeName" />
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">

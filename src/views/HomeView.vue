@@ -1,8 +1,8 @@
 <script>
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import { usePaletteStore } from '../store/Palette.store'
 import Palette from '@/models/Palette.js'
-import { useStorage } from '@vueuse/core'
 
 export default defineComponent({
   name: 'HomeView',
@@ -10,33 +10,19 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const palettes = reactive([])
+    const paletteStore = usePaletteStore();
+    const palettes = paletteStore.palettes;
     const animate = reactive([])
-    const favorites = useStorage('backgrounds', [])
 
-    addPalettes(30)
+    if (!palettes.length) paletteStore.addPalettes(30)
 
-    /**
-     * Adds new palettes to the array.
-     *
-     * @param {number} qty - The number of palettes to add.
-     * @return {void}
-     */
-    function addPalettes(qty) {
-      palettes.push(...Array.from({ length: qty }, () => new Palette()))
-    }
-
-    /**
-     * Replaces the palette at the specified index with a new palette.
-     *
-     * @param {number} index - The index of the palette to replace. Must be a non-negative integer.
-     * @return {undefined}
-     */
     // eslint-disable-next-line no-unused-vars
     function replacePalette(index = -1) {
       if (index < 0) {
         return
       }
+
+      paletteStore.saveInFavorites(palettes[index]);
 
       animate[index] = true
 
@@ -49,15 +35,10 @@ export default defineComponent({
       }, 500)
     }
 
-    function addToFavorites (item, index) {
-      favorites.value.push(item);
-      replacePalette(index);
-    }
-
     return {
       palettes,
       animate,
-      addToFavorites
+      replacePalette
     }
   }
 })
@@ -73,7 +54,7 @@ export default defineComponent({
       :item="item"
       class="card"
       :class="{ hidden: animate[index] }"
-      @click="addToFavorites(item, index)"
+      @click="replacePalette(index)"
     />
   </section>
 </template>
