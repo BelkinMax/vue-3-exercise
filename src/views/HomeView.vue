@@ -2,6 +2,7 @@
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
 import Palette from '@/models/Palette.js'
+import store from '@/store/'
 
 export default defineComponent({
   name: 'HomeView',
@@ -9,10 +10,12 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const palettes = reactive([])
+    const palettes = store.getters.getPalettes();
     const animate = reactive([])
 
-    addPalettes(30)
+    if (palettes.length === 0) {
+      addPalettes(30)
+    }
 
     /**
      * Adds new palettes to the array.
@@ -31,7 +34,7 @@ export default defineComponent({
      * @return {undefined}
      */
     // eslint-disable-next-line no-unused-vars
-    function replacePalette(index = -1) {
+    function replacePalette(item, index = -1) {
       if (index < 0) {
         return
       }
@@ -45,11 +48,14 @@ export default defineComponent({
       setTimeout(() => {
         animate[index] = false
       }, 500)
+
+      store.mutations.addFavorite(item);
     }
 
     return {
       palettes,
-      animate
+      animate,
+      replacePalette
     }
   }
 })
@@ -63,8 +69,10 @@ export default defineComponent({
       v-for="(item, index) in palettes"
       :key="item.id"
       :item="item"
+      :index="index"
       class="card"
       :class="{ hidden: animate[index] }"
+      @paletteClick="replacePalette(item, index)"
     />
   </section>
 </template>
