@@ -1,11 +1,11 @@
 <script>
-import { defineComponent, reactive } from 'vue'
-import PaletteCard from '@/components/PaletteCard.vue'
+import { defineComponent } from 'vue'
 import { useStore } from '@/composables/useStore.composable.js'
+import Grid from '@/components/Grid.vue'
 
 export default defineComponent({
   name: 'FavoritesView',
-  components: { PaletteCard },
+  components: { Grid },
   setup() {
     const { favorites } = useStore();
 
@@ -29,10 +29,16 @@ export default defineComponent({
 
 <template>
   <h2>My Favorites</h2>
-
-  <TransitionGroup name="list" tag="section" class="favorites-view">
-    <PaletteCard v-for="(item, index) in favorites" :key="item.id" is-favorite is-editable :item="item" @toggleFavorites="removeItem(index)" @inputChanged="renameItem" />
-  </TransitionGroup>
+  <section class="favorites-view">
+    <Grid
+      class="favorites-view__grid"
+      :items="favorites"
+      @buttonClick="removeItem"
+      @inputChanged="renameItem"
+      is-favorite
+      is-editable
+    />
+  </section>
 </template>
 
 <style lang="scss" scoped>
@@ -48,12 +54,5 @@ export default defineComponent({
 
 h2 {
   margin-bottom: 3rem;
-}
-
-.favorites-view {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 3em;
 }
 </style>

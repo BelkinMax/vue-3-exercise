@@ -68,7 +68,7 @@ export default defineComponent({
       :style="{
         backgroundImage: `linear-gradient(135deg, ${item.colors.join(', ')})`
       }"
-      @click="$emit('toggleFavorites')"
+      @click="$emit('buttonClick')"
     >
       <IconFavorite class="icon" :filled="isFavorite" />
     </button>
