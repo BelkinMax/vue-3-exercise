@@ -16,7 +16,6 @@ export default defineComponent({
       addPalettes(30)
     }
 
-
     /**
      * Adds new palettes to the array.
      *
@@ -29,8 +28,13 @@ export default defineComponent({
       store.setPaletteList(palettes);
     }
 
+    function replacePalette(index = -1) {
+      store.replacePalette(index, new Palette())
+    }
+
     return {
-      palettes: store.paletteList
+      palettes: store.paletteList,
+      replacePalette
     }
   }
 })
@@ -40,5 +44,6 @@ export default defineComponent({
   <PaletteGrid
     title="Discover Palettes"
     :items="palettes"
+    @toggle="replacePalette"
   />
 </template>

@@ -1,7 +1,6 @@
 <script>
 import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
-import Palette from '@/models/Palette.js'
 import { usePaletteStore } from '@/store/palette'
 
 export default defineComponent({
@@ -29,7 +28,8 @@ export default defineComponent({
       default: ''
     }
   },
-  setup({ isFavorite }) {
+  emits: ['toggle', 'changeName'],
+  setup({ isFavorite }, { emit }) {
     const animate = reactive([])
     const store = usePaletteStore()
 
@@ -41,7 +41,7 @@ export default defineComponent({
       animate[index] = true
 
       setTimeout(() => {
-        store.replacePalette(index, new Palette())
+        emit('toggle', index);
       }, 300)
 
       setTimeout(() => {
@@ -51,17 +51,21 @@ export default defineComponent({
 
     function onToggle (index) {
       if (isFavorite) {
-        store.removeFromFavorites(index)
+        emit('toggle', index);
       } else {
         replacePalette(index)
       }
+    }
+  
+    function onChangeName (event, index) {
+      emit('changeName', { event, index })
     }
 
     return {
       favorites: store.favoritesList,
       animate,
       onToggle,
-      onChangeName: store.changeFavoriteName,
+      onChangeName,
     }
   }
 })

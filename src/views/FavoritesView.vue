@@ -23,5 +23,7 @@ export default defineComponent({
     title="My Favorites"
     :is-favorite="true"
     :is-editable="true"
-    :items="favorites" />
+    :items="favorites"
+    @toggle="removeFavorite"
+    @changeName="(value) => onChangeName(value.event, value.index)" />
 </template>
