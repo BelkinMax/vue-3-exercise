@@ -1,5 +1,5 @@
 <script>
-import { defineComponent, ref } from 'vue'
+import {defineComponent, ref} from 'vue'
 import { copyColors } from '@/helpers/clipboard.js'
 import IconCopy from '@/components/icons/IconCopy.vue'
 import IconFavorite from '@/components/icons/IconFavorite.vue'
@@ -26,9 +26,10 @@ export default defineComponent({
       default: false
     }
   },
-  setup({ item }) {
+  emits: ['toggleFavorites', 'updateTitle'],
+  setup({ item }, { emit }) {
     const showCopyFeedback = ref(false)
-    const title = item.name
+    const title = ref(item.name);
 
     /**
      * Copies the CSS code for a linear gradient background to the clipboard.
@@ -50,9 +51,18 @@ export default defineComponent({
       }, 1000)
     }
 
+    function toggleFavorites () {
+      emit('toggleFavorites');
+    }
+
+    function updateTitle () {
+      emit('updateTitle', title)
+    }
+
     return {
       copyCss,
-      toggleFavorites: () => {},
+      toggleFavorites,
+      updateTitle,
       title,
       showCopyFeedback
     }
@@ -75,7 +85,7 @@ export default defineComponent({
     <figcaption class="caption">
       <TransitionGroup name="move" tag="div" class="transition-box">
         <span v-if="showCopyFeedback" data-cy="card-copied">Copied! 👍</span>
-        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" :value="title" />
+        <input v-else :disabled="!isEditable" type="text" data-cy="card-title" v-model="title" @keyup.enter="updateTitle" />
       </TransitionGroup>
 
       <button data-cy="card-copy-button" @click="copyCss">
