@@ -1,15 +1,46 @@
 <script>
-import { defineComponent } from 'vue'
+import {computed, defineComponent, ref} from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import {useStore} from "vuex";
+import Alert from "@/components/Alert.vue";
 
 export default defineComponent({
   name: 'FavoritesView',
-  components: { PaletteCard },
+  components: {Alert, PaletteCard},
   setup() {
-    const favorites = []
+    const store = useStore();
+    const showAlert = ref(false);
+    let idToRemove = undefined;
+
+    function removePaletteToFav () {
+      if (!idToRemove) {
+        return;
+      }
+      store.dispatch('removePaletteToFav', idToRemove)
+    }
+
+    function openAlert (id) {
+      showAlert.value = true;
+      idToRemove = id;
+    }
+
+    function onOk () {
+      showAlert.value = false;
+      removePaletteToFav(idToRemove)
+    }
+
+    function onCancel () {
+      showAlert.value = false;
+      idToRemove = undefined;
+    }
 
     return {
-      favorites
+      favorites: computed(() => store.state.favorites),
+      updateTitlePaletteToFav: (title, id) => store.dispatch('updateTitlePaletteToFav', { id, title }),
+      showAlert,
+      openAlert,
+      onOk,
+      onCancel
     }
   }
 })
@@ -17,9 +48,22 @@ export default defineComponent({
 
 <template>
   <h2>My Favorites</h2>
-
+  <Teleport v-if="showAlert" to="#global-alert">
+    <Alert
+        @ok="onOk"
+        @cancel="onCancel"
+    />
+  </Teleport>
   <TransitionGroup name="list" tag="section" class="favorites-view">
-    <PaletteCard v-for="item in favorites" :key="item.id" is-favorite is-editable :item="item" />
+    <PaletteCard
+        v-for="item in favorites"
+        :key="item.id"
+        is-favorite
+        is-editable
+        :item="item"
+        @toggleFavorites="openAlert(item.id)"
+        @updateTitle="updateTitlePaletteToFav($event, item.id)"
+    />
   </TransitionGroup>
 </template>
 

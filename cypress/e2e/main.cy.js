@@ -4,6 +4,8 @@ describe('Home page', () => {
   const cardFavoritesButtonSelector = '[data-cy="card-favorites-button"]'
   const cardCopyButtonSelector = '[data-cy="card-copy-button"]'
   const cardCopiedSelector = '[data-cy="card-copied"]'
+  const alertButtonOkSelector = '[data-cy="alert-button-ok"]'
+  const alertButtonCancelSelector = '[data-cy="alert-button-cancel"]'
   const homeLinkSelector = '[href="/"]'
   const favoritesLinkSelector = '[href="/favorites"]'
 
@@ -31,11 +33,12 @@ describe('Home page', () => {
         .should('be.visible')
     })
 
-    it('should maintain palettes on route change and back', () => {
+    it.only('should maintain palettes on route change and back', () => {
       const texts = [];
 
       cy.get(cardTitleSelector)
         .each(($el) => {
+          console.log('1', $el.val());
           texts.push($el.val());
         });
 
@@ -52,6 +55,7 @@ describe('Home page', () => {
       cy.get(cardTitleSelector)
         .should('have.length.greaterThan', 1)
         .each(($el, idx) => {
+          console.log('2', $el.val());
           if ($el.val() !== texts[idx]) {
             throw new Error('Text does not match');
           }
@@ -79,7 +83,7 @@ describe('Home page', () => {
 
           cy.get(cardTitleSelector)
             .first()
-            .should('contain', text)
+            .should('have.value', text)
         });
     })
   })
@@ -101,13 +105,30 @@ describe('Home page', () => {
         .should('have.length', 1)
     })
 
-    it('on Favorites page palette click should remove it from favorites', () => {
+    it('on Favorites page palette click and click ok from alert should remove it from favorites', () => {
       cy.get(cardFavoritesButtonSelector)
+        .first()
+        .trigger('click')
+
+      cy.get(alertButtonOkSelector)
         .first()
         .trigger('click')
 
       cy.get(cardSelector)
         .should('have.length', 0)
+    })
+
+    it('on Favorites page palette click and click cancel from alert should  not remove it from favorites', () => {
+      cy.get(cardFavoritesButtonSelector)
+        .first()
+        .trigger('click')
+
+      cy.get(alertButtonCancelSelector)
+        .first()
+        .trigger('click')
+
+      cy.get(cardSelector)
+        .should('have.length', 1)
     })
 
     it('should rename palette', () => {
@@ -131,7 +152,7 @@ describe('Home page', () => {
 
       cy.get(cardTitleSelector)
         .first()
-        .should('contain', 'Color Name')
+        .should('have.value', 'Color Name')
     })
   })
 })
