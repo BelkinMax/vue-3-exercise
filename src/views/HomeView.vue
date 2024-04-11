@@ -3,6 +3,7 @@ import { defineComponent, reactive } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
 import Palette from '@/models/Palette.js'
 import { useStorage } from '@vueuse/core'
+import { useGlobalState } from '../store'
 
 const FAVOURITES_PALETTES_STORAGE_ID = 'favourites_palletes';
 
@@ -12,7 +13,7 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const palettes = reactive([])
+    const { palettes } = useGlobalState();
     const animate = reactive([])
     const favouritesPalletes = useStorage(FAVOURITES_PALETTES_STORAGE_ID, []);
 
