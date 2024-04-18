@@ -1,5 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import DialogsContainer from '@/modules/dialog/components/DialogsContainer.vue'
 </script>
 
 <template>
@@ -14,6 +15,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
   <main>
     <RouterView />
+    <DialogsContainer />
   </main>
 </template>
 

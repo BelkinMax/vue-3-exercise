@@ -1,7 +1,8 @@
 <script>
-import { defineComponent, reactive } from 'vue'
+import { defineComponent } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
-import Palette from '@/models/Palette.js'
+import { usePalettes } from '@/composables/palettes'
+import { useFavorites } from '@/composables/favorites'
 
 export default defineComponent({
   name: 'HomeView',
@@ -9,46 +10,13 @@ export default defineComponent({
     PaletteCard
   },
   setup() {
-    const palettes = reactive([])
-    const animate = reactive([])
-
-    addPalettes(30)
-
-    /**
-     * Adds new palettes to the array.
-     *
-     * @param {number} qty - The number of palettes to add.
-     * @return {void}
-     */
-    function addPalettes(qty) {
-      palettes.push(...Array.from({ length: qty }, () => new Palette()))
-    }
-
-    /**
-     * Replaces the palette at the specified index with a new palette.
-     *
-     * @param {number} index - The index of the palette to replace. Must be a non-negative integer.
-     * @return {undefined}
-     */
-    // eslint-disable-next-line no-unused-vars
-    function replacePalette(index = -1) {
-      if (index < 0) {
-        return
-      }
-
-      animate[index] = true
-
-      setTimeout(() => {
-        palettes[index] = new Palette()
-      }, 300)
-
-      setTimeout(() => {
-        animate[index] = false
-      }, 500)
-    }
+    const { favoriteIds } = useFavorites();
+    const { replacePalette, animate, palettes } = usePalettes();
 
     return {
       palettes,
+      favoriteIds,
+      replacePalette,
       animate
     }
   }
@@ -64,6 +32,8 @@ export default defineComponent({
       :key="item.id"
       :item="item"
       class="card"
+      :isFavorite="favoriteIds.includes(item.id)"
+      @favorite-click="replacePalette(index)"
       :class="{ hidden: animate[index] }"
     />
   </section>
@@ -76,7 +46,7 @@ h2 {
 
 .home-view {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 3em;
 
   .card {

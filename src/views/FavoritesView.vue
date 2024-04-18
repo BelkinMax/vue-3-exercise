@@ -1,12 +1,13 @@
 <script>
 import { defineComponent } from 'vue'
 import PaletteCard from '@/components/PaletteCard.vue'
+import { useFavorites } from '@/composables/favorites'
 
 export default defineComponent({
   name: 'FavoritesView',
   components: { PaletteCard },
   setup() {
-    const favorites = []
+    const { favorites } = useFavorites();
 
     return {
       favorites
@@ -41,7 +42,7 @@ h2 {
 .favorites-view {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 3em;
 }
 </style>
